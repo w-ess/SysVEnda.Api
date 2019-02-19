@@ -23,9 +23,9 @@ namespace SysVenda.Api.Controllers
 
         // GET: api/Produtos
         [HttpGet]
-        public IEnumerable<Produto> GetPRODUTOS()
+        public IEnumerable<Produto> GetProdutos()
         {
-            return _context.PRODUTOS;
+            return _context.Produtos;
         }
 
         // GET: api/Produtos/5
@@ -37,7 +37,7 @@ namespace SysVenda.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var produto = await _context.PRODUTOS.FindAsync(id);
+            var produto = await _context.Produtos.FindAsync(id);
 
             if (produto == null)
             {
@@ -91,7 +91,7 @@ namespace SysVenda.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            _context.PRODUTOS.Add(produto);
+            _context.Produtos.Add(produto);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetProduto", new { id = produto.Codigo }, produto);
@@ -106,13 +106,13 @@ namespace SysVenda.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var produto = await _context.PRODUTOS.FindAsync(id);
+            var produto = await _context.Produtos.FindAsync(id);
             if (produto == null)
             {
                 return NotFound();
             }
 
-            _context.PRODUTOS.Remove(produto);
+            _context.Produtos.Remove(produto);
             await _context.SaveChangesAsync();
 
             return Ok(produto);
@@ -120,7 +120,7 @@ namespace SysVenda.Api.Controllers
 
         private bool ProdutoExists(int id)
         {
-            return _context.PRODUTOS.Any(e => e.Codigo == id);
+            return _context.Produtos.Any(e => e.Codigo == id);
         }
     }
 }
