@@ -13,6 +13,8 @@ namespace SysVenda.Api.Data
         : base(options)
         {}
 
-        public DbSet<Produto> PRODUTOS { get; set; }
+        public DbSet<Produto> Produtos { get; set; }
+        public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<EstoqueMovimento> EstoqueMovimentos { get; set; }
     }
 }

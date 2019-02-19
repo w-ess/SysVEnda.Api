@@ -6,17 +6,18 @@ using System.Text;
 
 namespace SysVenda.Domain.Entidades
 {
-    [Table("PRODUTOS")]
-    public class Produto
+    [Table("USUARIOS")]
+    public class Usuario
     {
         [Key]
         public int Codigo { get; set; }
 
-        public string Descricao { get; set; }
+        public string Nome { get; set; }
 
-        public decimal PrecoVenda { get; set; }
+        public string Senha { get; set; }
 
-        public decimal UnidadeMedida { get; set; }
-        
+        public string Email { get; set; }
+
+        public Boolean Bloqueado { get; set; }
     }
 }
