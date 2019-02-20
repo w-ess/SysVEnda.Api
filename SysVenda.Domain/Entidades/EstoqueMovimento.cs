@@ -15,9 +15,10 @@ namespace SysVenda.Domain.Entidades
         public double QuantidadeEntrada { get; set; }
 
         public double QuantidadeSaida { get; set; }
-
-        public int ProdutoId { get; set; }
         
+        public int ProdutoCd { get; set; }
+
+        [ForeignKey("ProdutoCd")]
         public Produto Produto { get; set; }
     }
 }
