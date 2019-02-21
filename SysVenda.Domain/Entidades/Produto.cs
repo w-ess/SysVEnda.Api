@@ -12,11 +12,13 @@ namespace SysVenda.Domain.Entidades
         [Key]
         public int Codigo { get; set; }
 
+        [Column(TypeName = "varchar(45)")]
         public string Descricao { get; set; }
 
+        [Column(TypeName = "decimal(15, 2)")]
         public decimal PrecoVenda { get; set; }
 
-        public decimal UnidadeMedida { get; set; }
-        
+        [Column(TypeName = "varchar(5)")]
+        public string UnidadeMedida { get; set; }        
     }
 }

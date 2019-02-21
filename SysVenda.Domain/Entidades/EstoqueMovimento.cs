@@ -10,11 +10,13 @@ namespace SysVenda.Domain.Entidades
     public class EstoqueMovimento
     {
         [Key]
-        public int Codigo { get; set; }        
-                
-        public double QuantidadeEntrada { get; set; }
+        public int Codigo { get; set; }
 
-        public double QuantidadeSaida { get; set; }
+        [Column(TypeName = "decimal(15, 2)")]
+        public decimal QuantidadeEntrada { get; set; }
+
+        [Column(TypeName = "decimal(15, 2)")]
+        public decimal QuantidadeSaida { get; set; }
         
         public int ProdutoCd { get; set; }
 

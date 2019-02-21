@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -81,6 +82,17 @@ namespace SysVenda.Api.Controllers
 
             return NoContent();
         }
+
+         [HttpPatch("{id}")]
+         public void Patch(int id, Delta<Produto> produto)
+         { 
+              var dominio = _context.Produtos.FirstOrDefault(x => x.Codigo == id);
+         
+              if (dominio != null)
+              {
+                produto.Patch(dominio);
+              }
+         }
 
         // POST: api/Produtos
         [HttpPost]
