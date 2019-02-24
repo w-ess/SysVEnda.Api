@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.OData;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,8 +14,9 @@ using SysVenda.Domain.Entidades;
 namespace SysVenda.Api.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
-    public class ProdutosController : ControllerBase
+    [Authorize(AuthenticationSchemes =
+    JwtBearerDefaults.AuthenticationScheme)]    
+    public class ProdutosController : Controller
     {
         private readonly ApplicationDbContext _context;
 

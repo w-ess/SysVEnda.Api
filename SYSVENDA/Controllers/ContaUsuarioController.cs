@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -14,13 +13,13 @@ namespace SysVenda.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountController : ControllerBase
+    public class ContaUsuarioController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AccountController(
+        public ContaUsuarioController(
             ApplicationDbContext context,
             UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager)
@@ -29,9 +28,7 @@ namespace SysVenda.Api.Controllers
             _userManager = userManager;
             _roleManager = roleManager;
         }
-
-        //public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
-
+       
 
         private IActionResult GetErrorResult(IdentityResult result)
         {
@@ -61,8 +58,8 @@ namespace SysVenda.Api.Controllers
         // POST api/Account/Register
         [AllowAnonymous]
         [HttpPost]
-        [Route("Register")]
-        public async Task<IActionResult> Register([FromBody] RegisterBindingModel model)
+        [Route("Registrar")]
+        public async Task<IActionResult> Registrar([FromBody] RegisterBindingModel model)
         {
             if (!ModelState.IsValid)
             {
