@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SysVenda.Domain.Entidades;
+using SysVenda.Domain.Financeiro;
 
 namespace SysVenda.Api.Data
 {
@@ -23,6 +24,12 @@ namespace SysVenda.Api.Data
         public DbSet<FormaPagamento> FormaPagamentos { get; set; }
         public DbSet<ComandaItem> ComandaItens { get; set; }
         public DbSet<Comanda> Comandas { get; set; }
-        public DbSet<ClassificacaoPessoa> ClassificacaoPessoas { get; set; }        
+        public DbSet<ClassificacaoPessoa> ClassificacaoPessoas { get; set; }
+        public DbSet<ContaPagar> ContaPagar { get; set; }
+        public DbSet<ContaPagarParcela> ContaPagarParcela { get; set; }
+        public DbSet<ContaReceber> ContaReceber { get; set; }
+        public DbSet<ContaReceberParcela> ContaReceberParcela { get; set; }
+        public DbSet<ContaRecebimento> ContaRecebimento { get; set; }
+        public DbSet<ContaPagamento> ContaPagamento { get; set; }
     }
 }
