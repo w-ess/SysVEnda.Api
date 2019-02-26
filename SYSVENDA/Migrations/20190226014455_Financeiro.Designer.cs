@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SysVenda.Api.Data;
@@ -9,9 +10,10 @@ using SysVenda.Api.Data;
 namespace SysVenda.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190226014455_Financeiro")]
+    partial class Financeiro
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -242,150 +244,6 @@ namespace SysVenda.Api.Migrations
                     b.ToTable("USUARIOS");
                 });
 
-            modelBuilder.Entity("SysVenda.Domain.Financeiro.ContaPagamento", b =>
-                {
-                    b.Property<int>("Codigo")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("ContaPagarParcelaCd");
-
-                    b.Property<DateTime>("Data");
-
-                    b.Property<DateTime>("DataCadastro")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<decimal>("Valor")
-                        .HasColumnType("decimal(15, 2)");
-
-                    b.HasKey("Codigo");
-
-                    b.HasIndex("ContaPagarParcelaCd");
-
-                    b.ToTable("CONTAS_PAGAMENTOS");
-                });
-
-            modelBuilder.Entity("SysVenda.Domain.Financeiro.ContaPagar", b =>
-                {
-                    b.Property<int>("Codigo")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("Data");
-
-                    b.Property<DateTime>("DataCadastro")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Observacao")
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<int>("RecebedorCd");
-
-                    b.HasKey("Codigo");
-
-                    b.HasIndex("RecebedorCd");
-
-                    b.ToTable("CONTAS_PAGAR");
-                });
-
-            modelBuilder.Entity("SysVenda.Domain.Financeiro.ContaPagarParcela", b =>
-                {
-                    b.Property<int>("Codigo")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("ContaPagarCd");
-
-                    b.Property<decimal>("Juros")
-                        .HasColumnType("decimal(15, 2)");
-
-                    b.Property<decimal>("Multa")
-                        .HasColumnType("decimal(15, 2)");
-
-                    b.Property<int>("Parcela");
-
-                    b.Property<string>("Titulo")
-                        .HasColumnType("varchar(20)");
-
-                    b.Property<decimal>("Valor")
-                        .HasColumnType("decimal(15, 2)");
-
-                    b.HasKey("Codigo");
-
-                    b.HasIndex("ContaPagarCd");
-
-                    b.ToTable("CONTAS_PAGAR_PARCELAS");
-                });
-
-            modelBuilder.Entity("SysVenda.Domain.Financeiro.ContaReceber", b =>
-                {
-                    b.Property<int>("Codigo")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("Data");
-
-                    b.Property<DateTime>("DataCadastro")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Observacao")
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<int>("PagadorCd");
-
-                    b.HasKey("Codigo");
-
-                    b.HasIndex("PagadorCd");
-
-                    b.ToTable("CONTAS_RECEBER");
-                });
-
-            modelBuilder.Entity("SysVenda.Domain.Financeiro.ContaReceberParcela", b =>
-                {
-                    b.Property<int>("Codigo")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("ContaReceberCd");
-
-                    b.Property<decimal>("Juros")
-                        .HasColumnType("decimal(15, 2)");
-
-                    b.Property<decimal>("Multa")
-                        .HasColumnType("decimal(15, 2)");
-
-                    b.Property<int>("Parcela");
-
-                    b.Property<string>("Titulo")
-                        .HasColumnType("varchar(20)");
-
-                    b.Property<decimal>("Valor")
-                        .HasColumnType("decimal(15, 2)");
-
-                    b.HasKey("Codigo");
-
-                    b.HasIndex("ContaReceberCd");
-
-                    b.ToTable("CONTAS_RECEBER_PARCELAS");
-                });
-
-            modelBuilder.Entity("SysVenda.Domain.Financeiro.ContaRecebimento", b =>
-                {
-                    b.Property<int>("Codigo")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("ContaReceberParcelaCd");
-
-                    b.Property<DateTime>("Data");
-
-                    b.Property<DateTime>("DataCadastro")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<decimal>("Valor")
-                        .HasColumnType("decimal(15, 2)");
-
-                    b.HasKey("Codigo");
-
-                    b.HasIndex("ContaReceberParcelaCd");
-
-                    b.ToTable("CONTAS_RECEBIMENTOS");
-                });
-
             modelBuilder.Entity("SysVenda.Domain.Entidades.ClassificacaoPessoa", b =>
                 {
                     b.HasOne("SysVenda.Domain.Entidades.Pessoa", "Pessoa")
@@ -438,54 +296,6 @@ namespace SysVenda.Api.Migrations
                     b.HasOne("SysVenda.Domain.Entidades.Pessoa")
                         .WithMany("Pessoas")
                         .HasForeignKey("PessoaCodigo");
-                });
-
-            modelBuilder.Entity("SysVenda.Domain.Financeiro.ContaPagamento", b =>
-                {
-                    b.HasOne("SysVenda.Domain.Financeiro.ContaPagarParcela", "ContaPagarParcela")
-                        .WithMany()
-                        .HasForeignKey("ContaPagarParcelaCd")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("SysVenda.Domain.Financeiro.ContaPagar", b =>
-                {
-                    b.HasOne("SysVenda.Domain.Entidades.Pessoa", "Recebedor")
-                        .WithMany()
-                        .HasForeignKey("RecebedorCd")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("SysVenda.Domain.Financeiro.ContaPagarParcela", b =>
-                {
-                    b.HasOne("SysVenda.Domain.Financeiro.ContaPagar", "ContaPagar")
-                        .WithMany("ContasPagarParcelas")
-                        .HasForeignKey("ContaPagarCd")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("SysVenda.Domain.Financeiro.ContaReceber", b =>
-                {
-                    b.HasOne("SysVenda.Domain.Entidades.Pessoa", "Pagador")
-                        .WithMany()
-                        .HasForeignKey("PagadorCd")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("SysVenda.Domain.Financeiro.ContaReceberParcela", b =>
-                {
-                    b.HasOne("SysVenda.Domain.Financeiro.ContaReceber", "ContaReceber")
-                        .WithMany("ContasPagarParcelas")
-                        .HasForeignKey("ContaReceberCd")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("SysVenda.Domain.Financeiro.ContaRecebimento", b =>
-                {
-                    b.HasOne("SysVenda.Domain.Financeiro.ContaReceberParcela", "ContaReceberParcela")
-                        .WithMany()
-                        .HasForeignKey("ContaReceberParcelaCd")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }
