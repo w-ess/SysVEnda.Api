@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SysVenda.Api.Data;
@@ -9,9 +10,10 @@ using SysVenda.Api.Data;
 namespace SysVenda.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190225221548_CorrecaoPessoa")]
+    partial class CorrecaoPessoa
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -395,7 +397,97 @@ namespace SysVenda.Api.Migrations
                     b.ToTable("USUARIOS");
                 });
 
-s
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.HasOne("SysVenda.Domain.Entidades.ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.HasOne("SysVenda.Domain.Entidades.ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("SysVenda.Domain.Entidades.ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.HasOne("SysVenda.Domain.Entidades.ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("SysVenda.Domain.Entidades.ClassificacaoPessoa", b =>
+                {
+                    b.HasOne("SysVenda.Domain.Entidades.Pessoa", "Pessoa")
+                        .WithMany("ClassificacaoPessoa")
+                        .HasForeignKey("PessoaCd")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("SysVenda.Domain.Entidades.Comanda", b =>
+                {
+                    b.HasOne("SysVenda.Domain.Entidades.FormaPagamento", "FormaPagamento")
+                        .WithMany()
+                        .HasForeignKey("FormaPagamentoCd")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("SysVenda.Domain.Entidades.Garcom", "Garcom")
+                        .WithMany()
+                        .HasForeignKey("GarcomCd")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("SysVenda.Domain.Entidades.Mesa", "Mesa")
+                        .WithMany()
+                        .HasForeignKey("MesaCd")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("SysVenda.Domain.Entidades.ComandaItem", b =>
+                {
+                    b.HasOne("SysVenda.Domain.Entidades.Comanda", "Comanda")
+                        .WithMany()
+                        .HasForeignKey("ComandaCd")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("SysVenda.Domain.Entidades.Produto", "Produto")
+                        .WithMany()
+                        .HasForeignKey("ProdutoCd")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("SysVenda.Domain.Entidades.EstoqueMovimento", b =>
+                {
+                    b.HasOne("SysVenda.Domain.Entidades.Produto", "Produto")
+                        .WithMany()
+                        .HasForeignKey("ProdutoCd")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
 #pragma warning restore 612, 618
         }
     }
