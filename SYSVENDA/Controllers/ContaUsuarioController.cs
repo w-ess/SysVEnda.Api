@@ -55,7 +55,7 @@ namespace SysVenda.Api.Controllers
         }
 
 
-        // POST api/Account/Register
+        // POST api/ContaUsuario/Registrar
         [AllowAnonymous]
         [HttpPost]
         [Route("Registrar")]
@@ -69,6 +69,29 @@ namespace SysVenda.Api.Controllers
             var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
 
             IdentityResult result = await _userManager.CreateAsync(user, model.Password);
+
+            if (!result.Succeeded)
+            {
+                return GetErrorResult(result);
+            }
+
+            return Ok();
+        }
+
+        // POST api/ContaUsuario/AlterarSenha
+        [HttpPost]
+        [Route("AlterarSenha")]
+        public async Task<IActionResult> AlterarSenha(ChangePasswordBindingModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var usuarioLogado = await _userManager.GetUserAsync(HttpContext.User);
+
+            IdentityResult result = await _userManager.ChangePasswordAsync(usuarioLogado, model.OldPassword,
+                model.NewPassword);
 
             if (!result.Succeeded)
             {
