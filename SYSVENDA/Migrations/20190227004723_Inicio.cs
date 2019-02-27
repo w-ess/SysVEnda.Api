@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace SysVenda.Api.Migrations
 {
-    public partial class InitialSecurity : Migration
+    public partial class Inicio : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -102,18 +102,11 @@ namespace SysVenda.Api.Migrations
                     Cep = table.Column<string>(type: "varchar(8)", nullable: true),
                     Bairro = table.Column<string>(type: "varchar(50)", nullable: true),
                     Endereco = table.Column<string>(type: "varchar(50)", nullable: true),
-                    Numero = table.Column<string>(type: "varchar(8)", nullable: true),
-                    PessoaCodigo = table.Column<int>(nullable: true)
+                    Numero = table.Column<string>(type: "varchar(8)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PESSOAS", x => x.Codigo);
-                    table.ForeignKey(
-                        name: "FK_PESSOAS_PESSOAS_PessoaCodigo",
-                        column: x => x.PessoaCodigo,
-                        principalTable: "PESSOAS",
-                        principalColumn: "Codigo",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -124,7 +117,8 @@ namespace SysVenda.Api.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     Descricao = table.Column<string>(type: "varchar(45)", nullable: true),
                     PrecoVenda = table.Column<decimal>(type: "decimal(15, 2)", nullable: false),
-                    UnidadeMedida = table.Column<string>(type: "varchar(5)", nullable: true)
+                    UnidadeMedida = table.Column<string>(type: "varchar(5)", nullable: true),
+                    ControlaEstoque = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -195,8 +189,8 @@ namespace SysVenda.Api.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
-                    ProviderKey = table.Column<string>(maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(nullable: false),
+                    ProviderKey = table.Column<string>(nullable: false),
                     ProviderDisplayName = table.Column<string>(nullable: true),
                     UserId = table.Column<string>(nullable: false)
                 },
@@ -240,8 +234,8 @@ namespace SysVenda.Api.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(nullable: false),
-                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
-                    Name = table.Column<string>(maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
                     Value = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -311,6 +305,71 @@ namespace SysVenda.Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CONTAS_PAGAR",
+                columns: table => new
+                {
+                    Codigo = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    DataCadastro = table.Column<DateTime>(nullable: false),
+                    Data = table.Column<DateTime>(nullable: false),
+                    Observacao = table.Column<string>(type: "varchar(100)", nullable: true),
+                    RecebedorCd = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CONTAS_PAGAR", x => x.Codigo);
+                    table.ForeignKey(
+                        name: "FK_CONTAS_PAGAR_PESSOAS_RecebedorCd",
+                        column: x => x.RecebedorCd,
+                        principalTable: "PESSOAS",
+                        principalColumn: "Codigo",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CONTAS_RECEBER",
+                columns: table => new
+                {
+                    Codigo = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    DataCadastro = table.Column<DateTime>(nullable: false),
+                    Data = table.Column<DateTime>(nullable: false),
+                    Observacao = table.Column<string>(type: "varchar(100)", nullable: true),
+                    PagadorCd = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CONTAS_RECEBER", x => x.Codigo);
+                    table.ForeignKey(
+                        name: "FK_CONTAS_RECEBER_PESSOAS_PagadorCd",
+                        column: x => x.PagadorCd,
+                        principalTable: "PESSOAS",
+                        principalColumn: "Codigo",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TELEFONES",
+                columns: table => new
+                {
+                    Codigo = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    Ddd = table.Column<string>(nullable: true),
+                    Numero = table.Column<string>(nullable: true),
+                    PessoaCd = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TELEFONES", x => x.Codigo);
+                    table.ForeignKey(
+                        name: "FK_TELEFONES_PESSOAS_PessoaCd",
+                        column: x => x.PessoaCd,
+                        principalTable: "PESSOAS",
+                        principalColumn: "Codigo",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ESTOQUE_MOVIMENTO",
                 columns: table => new
                 {
@@ -357,6 +416,98 @@ namespace SysVenda.Api.Migrations
                         name: "FK_COMANDAS_ITENS_PRODUTOS_ProdutoCd",
                         column: x => x.ProdutoCd,
                         principalTable: "PRODUTOS",
+                        principalColumn: "Codigo",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CONTAS_PAGAR_PARCELAS",
+                columns: table => new
+                {
+                    Codigo = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    Titulo = table.Column<string>(type: "varchar(20)", nullable: true),
+                    Parcela = table.Column<int>(nullable: false),
+                    Valor = table.Column<decimal>(type: "decimal(15, 2)", nullable: false),
+                    Juros = table.Column<decimal>(type: "decimal(15, 2)", nullable: false),
+                    Multa = table.Column<decimal>(type: "decimal(15, 2)", nullable: false),
+                    ContaPagarCd = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CONTAS_PAGAR_PARCELAS", x => x.Codigo);
+                    table.ForeignKey(
+                        name: "FK_CONTAS_PAGAR_PARCELAS_CONTAS_PAGAR_ContaPagarCd",
+                        column: x => x.ContaPagarCd,
+                        principalTable: "CONTAS_PAGAR",
+                        principalColumn: "Codigo",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CONTAS_RECEBER_PARCELAS",
+                columns: table => new
+                {
+                    Codigo = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    Titulo = table.Column<string>(type: "varchar(20)", nullable: true),
+                    Parcela = table.Column<int>(nullable: false),
+                    Valor = table.Column<decimal>(type: "decimal(15, 2)", nullable: false),
+                    Juros = table.Column<decimal>(type: "decimal(15, 2)", nullable: false),
+                    Multa = table.Column<decimal>(type: "decimal(15, 2)", nullable: false),
+                    ContaReceberCd = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CONTAS_RECEBER_PARCELAS", x => x.Codigo);
+                    table.ForeignKey(
+                        name: "FK_CONTAS_RECEBER_PARCELAS_CONTAS_RECEBER_ContaReceberCd",
+                        column: x => x.ContaReceberCd,
+                        principalTable: "CONTAS_RECEBER",
+                        principalColumn: "Codigo",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CONTAS_PAGAMENTOS",
+                columns: table => new
+                {
+                    Codigo = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    DataCadastro = table.Column<DateTime>(nullable: false),
+                    Data = table.Column<DateTime>(nullable: false),
+                    Valor = table.Column<decimal>(type: "decimal(15, 2)", nullable: false),
+                    ContaPagarParcelaCd = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CONTAS_PAGAMENTOS", x => x.Codigo);
+                    table.ForeignKey(
+                        name: "FK_CONTAS_PAGAMENTOS_CONTAS_PAGAR_PARCELAS_ContaPagarParcelaCd",
+                        column: x => x.ContaPagarParcelaCd,
+                        principalTable: "CONTAS_PAGAR_PARCELAS",
+                        principalColumn: "Codigo",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CONTAS_RECEBIMENTOS",
+                columns: table => new
+                {
+                    Codigo = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    DataCadastro = table.Column<DateTime>(nullable: false),
+                    Data = table.Column<DateTime>(nullable: false),
+                    Valor = table.Column<decimal>(type: "decimal(15, 2)", nullable: false),
+                    ContaReceberParcelaCd = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CONTAS_RECEBIMENTOS", x => x.Codigo);
+                    table.ForeignKey(
+                        name: "FK_CONTAS_RECEBIMENTOS_CONTAS_RECEBER_PARCELAS_ContaReceberPar~",
+                        column: x => x.ContaReceberParcelaCd,
+                        principalTable: "CONTAS_RECEBER_PARCELAS",
                         principalColumn: "Codigo",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -429,14 +580,44 @@ namespace SysVenda.Api.Migrations
                 column: "ProdutoCd");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CONTAS_PAGAMENTOS_ContaPagarParcelaCd",
+                table: "CONTAS_PAGAMENTOS",
+                column: "ContaPagarParcelaCd");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CONTAS_PAGAR_RecebedorCd",
+                table: "CONTAS_PAGAR",
+                column: "RecebedorCd");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CONTAS_PAGAR_PARCELAS_ContaPagarCd",
+                table: "CONTAS_PAGAR_PARCELAS",
+                column: "ContaPagarCd");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CONTAS_RECEBER_PagadorCd",
+                table: "CONTAS_RECEBER",
+                column: "PagadorCd");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CONTAS_RECEBER_PARCELAS_ContaReceberCd",
+                table: "CONTAS_RECEBER_PARCELAS",
+                column: "ContaReceberCd");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CONTAS_RECEBIMENTOS_ContaReceberParcelaCd",
+                table: "CONTAS_RECEBIMENTOS",
+                column: "ContaReceberParcelaCd");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ESTOQUE_MOVIMENTO_ProdutoCd",
                 table: "ESTOQUE_MOVIMENTO",
                 column: "ProdutoCd");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PESSOAS_PessoaCodigo",
-                table: "PESSOAS",
-                column: "PessoaCodigo");
+                name: "IX_TELEFONES_PessoaCd",
+                table: "TELEFONES",
+                column: "PessoaCd");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -463,7 +644,16 @@ namespace SysVenda.Api.Migrations
                 name: "COMANDAS_ITENS");
 
             migrationBuilder.DropTable(
+                name: "CONTAS_PAGAMENTOS");
+
+            migrationBuilder.DropTable(
+                name: "CONTAS_RECEBIMENTOS");
+
+            migrationBuilder.DropTable(
                 name: "ESTOQUE_MOVIMENTO");
+
+            migrationBuilder.DropTable(
+                name: "TELEFONES");
 
             migrationBuilder.DropTable(
                 name: "USUARIOS");
@@ -475,10 +665,13 @@ namespace SysVenda.Api.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "PESSOAS");
+                name: "COMANDAS");
 
             migrationBuilder.DropTable(
-                name: "COMANDAS");
+                name: "CONTAS_PAGAR_PARCELAS");
+
+            migrationBuilder.DropTable(
+                name: "CONTAS_RECEBER_PARCELAS");
 
             migrationBuilder.DropTable(
                 name: "PRODUTOS");
@@ -491,6 +684,15 @@ namespace SysVenda.Api.Migrations
 
             migrationBuilder.DropTable(
                 name: "MESAS");
+
+            migrationBuilder.DropTable(
+                name: "CONTAS_PAGAR");
+
+            migrationBuilder.DropTable(
+                name: "CONTAS_RECEBER");
+
+            migrationBuilder.DropTable(
+                name: "PESSOAS");
         }
     }
 }
