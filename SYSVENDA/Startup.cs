@@ -36,7 +36,7 @@ namespace SYSVENDA
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseNpgsql(
+                options.UseMySql(
                     Configuration.GetConnectionString("DefaultConnection")));
             
 

@@ -4,22 +4,20 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SysVenda.Api.Data;
 
 namespace SysVenda.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190223192310_InitialSecurity")]
-    partial class InitialSecurity
+    [Migration("20190227013901_Inicio")]
+    partial class Inicio
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
                 .HasAnnotation("ProductVersion", "2.1.8-servicing-32085")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -84,11 +82,9 @@ namespace SysVenda.Api.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.Property<string>("LoginProvider")
-                        .HasMaxLength(128);
+                    b.Property<string>("LoginProvider");
 
-                    b.Property<string>("ProviderKey")
-                        .HasMaxLength(128);
+                    b.Property<string>("ProviderKey");
 
                     b.Property<string>("ProviderDisplayName");
 
@@ -119,11 +115,9 @@ namespace SysVenda.Api.Migrations
                 {
                     b.Property<string>("UserId");
 
-                    b.Property<string>("LoginProvider")
-                        .HasMaxLength(128);
+                    b.Property<string>("LoginProvider");
 
-                    b.Property<string>("Name")
-                        .HasMaxLength(128);
+                    b.Property<string>("Name");
 
                     b.Property<string>("Value");
 
@@ -212,7 +206,8 @@ namespace SysVenda.Api.Migrations
 
                     b.Property<int>("MesaCd");
 
-                    b.Property<char?>("Status");
+                    b.Property<string>("Status")
+                        .HasConversion(new ValueConverter<string, string>(v => default(string), v => default(string), new ConverterMappingHints(size: 1)));
 
                     b.HasKey("Codigo");
 
@@ -346,16 +341,13 @@ namespace SysVenda.Api.Migrations
                     b.Property<string>("Pais")
                         .HasColumnType("varchar(20)");
 
-                    b.Property<int?>("PessoaCodigo");
-
                     b.Property<string>("RazaoSocialNome")
                         .HasColumnType("varchar(50)");
 
-                    b.Property<char?>("Tipo");
+                    b.Property<string>("Tipo")
+                        .HasConversion(new ValueConverter<string, string>(v => default(string), v => default(string), new ConverterMappingHints(size: 1)));
 
                     b.HasKey("Codigo");
-
-                    b.HasIndex("PessoaCodigo");
 
                     b.ToTable("PESSOAS");
                 });
@@ -364,6 +356,8 @@ namespace SysVenda.Api.Migrations
                 {
                     b.Property<int>("Codigo")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("ControlaEstoque");
 
                     b.Property<string>("Descricao")
                         .HasColumnType("varchar(45)");
@@ -377,6 +371,24 @@ namespace SysVenda.Api.Migrations
                     b.HasKey("Codigo");
 
                     b.ToTable("PRODUTOS");
+                });
+
+            modelBuilder.Entity("SysVenda.Domain.Entidades.Telefone", b =>
+                {
+                    b.Property<int>("Codigo")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Ddd");
+
+                    b.Property<string>("Numero");
+
+                    b.Property<int>("PessoaCd");
+
+                    b.HasKey("Codigo");
+
+                    b.HasIndex("PessoaCd");
+
+                    b.ToTable("TELEFONES");
                 });
 
             modelBuilder.Entity("SysVenda.Domain.Entidades.Usuario", b =>
@@ -398,11 +410,156 @@ namespace SysVenda.Api.Migrations
                     b.Property<string>("Senha")
                         .HasColumnType("varchar(10)");
 
-                    b.Property<char?>("Tipo");
+                    b.Property<string>("Tipo")
+                        .HasConversion(new ValueConverter<string, string>(v => default(string), v => default(string), new ConverterMappingHints(size: 1)));
 
                     b.HasKey("Codigo");
 
                     b.ToTable("USUARIOS");
+                });
+
+            modelBuilder.Entity("SysVenda.Domain.Financeiro.ContaPagamento", b =>
+                {
+                    b.Property<int>("Codigo")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("ContaPagarParcelaCd");
+
+                    b.Property<DateTime>("Data");
+
+                    b.Property<DateTime>("DataCadastro")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<decimal>("Valor")
+                        .HasColumnType("decimal(15, 2)");
+
+                    b.HasKey("Codigo");
+
+                    b.HasIndex("ContaPagarParcelaCd");
+
+                    b.ToTable("CONTAS_PAGAMENTOS");
+                });
+
+            modelBuilder.Entity("SysVenda.Domain.Financeiro.ContaPagar", b =>
+                {
+                    b.Property<int>("Codigo")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("Data");
+
+                    b.Property<DateTime>("DataCadastro")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Observacao")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<int>("RecebedorCd");
+
+                    b.HasKey("Codigo");
+
+                    b.HasIndex("RecebedorCd");
+
+                    b.ToTable("CONTAS_PAGAR");
+                });
+
+            modelBuilder.Entity("SysVenda.Domain.Financeiro.ContaPagarParcela", b =>
+                {
+                    b.Property<int>("Codigo")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("ContaPagarCd");
+
+                    b.Property<decimal>("Juros")
+                        .HasColumnType("decimal(15, 2)");
+
+                    b.Property<decimal>("Multa")
+                        .HasColumnType("decimal(15, 2)");
+
+                    b.Property<int>("Parcela");
+
+                    b.Property<string>("Titulo")
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<decimal>("Valor")
+                        .HasColumnType("decimal(15, 2)");
+
+                    b.HasKey("Codigo");
+
+                    b.HasIndex("ContaPagarCd");
+
+                    b.ToTable("CONTAS_PAGAR_PARCELAS");
+                });
+
+            modelBuilder.Entity("SysVenda.Domain.Financeiro.ContaReceber", b =>
+                {
+                    b.Property<int>("Codigo")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("Data");
+
+                    b.Property<DateTime>("DataCadastro")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Observacao")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<int>("PagadorCd");
+
+                    b.HasKey("Codigo");
+
+                    b.HasIndex("PagadorCd");
+
+                    b.ToTable("CONTAS_RECEBER");
+                });
+
+            modelBuilder.Entity("SysVenda.Domain.Financeiro.ContaReceberParcela", b =>
+                {
+                    b.Property<int>("Codigo")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("ContaReceberCd");
+
+                    b.Property<decimal>("Juros")
+                        .HasColumnType("decimal(15, 2)");
+
+                    b.Property<decimal>("Multa")
+                        .HasColumnType("decimal(15, 2)");
+
+                    b.Property<int>("Parcela");
+
+                    b.Property<string>("Titulo")
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<decimal>("Valor")
+                        .HasColumnType("decimal(15, 2)");
+
+                    b.HasKey("Codigo");
+
+                    b.HasIndex("ContaReceberCd");
+
+                    b.ToTable("CONTAS_RECEBER_PARCELAS");
+                });
+
+            modelBuilder.Entity("SysVenda.Domain.Financeiro.ContaRecebimento", b =>
+                {
+                    b.Property<int>("Codigo")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("ContaReceberParcelaCd");
+
+                    b.Property<DateTime>("Data");
+
+                    b.Property<DateTime>("DataCadastro")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<decimal>("Valor")
+                        .HasColumnType("decimal(15, 2)");
+
+                    b.HasKey("Codigo");
+
+                    b.HasIndex("ContaReceberParcelaCd");
+
+                    b.ToTable("CONTAS_RECEBIMENTOS");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -453,7 +610,7 @@ namespace SysVenda.Api.Migrations
             modelBuilder.Entity("SysVenda.Domain.Entidades.ClassificacaoPessoa", b =>
                 {
                     b.HasOne("SysVenda.Domain.Entidades.Pessoa", "Pessoa")
-                        .WithMany()
+                        .WithMany("ClassificacoesPessoa")
                         .HasForeignKey("PessoaCd")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
@@ -497,11 +654,60 @@ namespace SysVenda.Api.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("SysVenda.Domain.Entidades.Pessoa", b =>
+            modelBuilder.Entity("SysVenda.Domain.Entidades.Telefone", b =>
                 {
-                    b.HasOne("SysVenda.Domain.Entidades.Pessoa")
-                        .WithMany("Pessoas")
-                        .HasForeignKey("PessoaCodigo");
+                    b.HasOne("SysVenda.Domain.Entidades.Pessoa", "Pessoa")
+                        .WithMany("Telefones")
+                        .HasForeignKey("PessoaCd")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("SysVenda.Domain.Financeiro.ContaPagamento", b =>
+                {
+                    b.HasOne("SysVenda.Domain.Financeiro.ContaPagarParcela", "ContaPagarParcela")
+                        .WithMany()
+                        .HasForeignKey("ContaPagarParcelaCd")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("SysVenda.Domain.Financeiro.ContaPagar", b =>
+                {
+                    b.HasOne("SysVenda.Domain.Entidades.Pessoa", "Recebedor")
+                        .WithMany()
+                        .HasForeignKey("RecebedorCd")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("SysVenda.Domain.Financeiro.ContaPagarParcela", b =>
+                {
+                    b.HasOne("SysVenda.Domain.Financeiro.ContaPagar", "ContaPagar")
+                        .WithMany("ContasPagarParcelas")
+                        .HasForeignKey("ContaPagarCd")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("SysVenda.Domain.Financeiro.ContaReceber", b =>
+                {
+                    b.HasOne("SysVenda.Domain.Entidades.Pessoa", "Pagador")
+                        .WithMany()
+                        .HasForeignKey("PagadorCd")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("SysVenda.Domain.Financeiro.ContaReceberParcela", b =>
+                {
+                    b.HasOne("SysVenda.Domain.Financeiro.ContaReceber", "ContaReceber")
+                        .WithMany("ContasPagarParcelas")
+                        .HasForeignKey("ContaReceberCd")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("SysVenda.Domain.Financeiro.ContaRecebimento", b =>
+                {
+                    b.HasOne("SysVenda.Domain.Financeiro.ContaReceberParcela", "ContaReceberParcela")
+                        .WithMany()
+                        .HasForeignKey("ContaReceberParcelaCd")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

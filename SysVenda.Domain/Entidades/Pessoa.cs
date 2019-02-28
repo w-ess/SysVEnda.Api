@@ -44,6 +44,7 @@ namespace SysVenda.Domain.Entidades
         [Column(TypeName = "varchar(8)")]
         public string Numero { get; set; }
 
-        public List<ClassificacaoPessoa> ClassificacaoPessoa { get; set; }
+        public List<ClassificacaoPessoa> ClassificacoesPessoa { get; set; }
+        public List<Telefone> Telefones { get; set; }
     }
 }
