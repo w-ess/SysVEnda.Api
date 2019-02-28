@@ -4,22 +4,20 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SysVenda.Api.Data;
 
 namespace SysVenda.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190227004723_Inicio")]
+    [Migration("20190227013901_Inicio")]
     partial class Inicio
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
                 .HasAnnotation("ProductVersion", "2.1.8-servicing-32085")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -208,7 +206,8 @@ namespace SysVenda.Api.Migrations
 
                     b.Property<int>("MesaCd");
 
-                    b.Property<char?>("Status");
+                    b.Property<string>("Status")
+                        .HasConversion(new ValueConverter<string, string>(v => default(string), v => default(string), new ConverterMappingHints(size: 1)));
 
                     b.HasKey("Codigo");
 
@@ -345,7 +344,8 @@ namespace SysVenda.Api.Migrations
                     b.Property<string>("RazaoSocialNome")
                         .HasColumnType("varchar(50)");
 
-                    b.Property<char?>("Tipo");
+                    b.Property<string>("Tipo")
+                        .HasConversion(new ValueConverter<string, string>(v => default(string), v => default(string), new ConverterMappingHints(size: 1)));
 
                     b.HasKey("Codigo");
 
@@ -410,7 +410,8 @@ namespace SysVenda.Api.Migrations
                     b.Property<string>("Senha")
                         .HasColumnType("varchar(10)");
 
-                    b.Property<char?>("Tipo");
+                    b.Property<string>("Tipo")
+                        .HasConversion(new ValueConverter<string, string>(v => default(string), v => default(string), new ConverterMappingHints(size: 1)));
 
                     b.HasKey("Codigo");
 
