@@ -11,7 +11,8 @@ namespace SysVenda.Domain.Entidades
     {
         [Key]
         public int Codigo { get; set; }
-        
+
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime DataHora { get; set; }
 
         public char? Status { get; set; }
