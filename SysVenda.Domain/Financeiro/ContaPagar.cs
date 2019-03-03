@@ -22,8 +22,12 @@ namespace SysVenda.Domain.Financeiro
         public string Observacao { get; set; }
 
         // Fk Pessoa//
-        public int RecebedorCd { get; set; }
+        // Fk Pessoa//
+        public int PagadorCd { get; set; }
+        [ForeignKey("PagadorCd")]
+        public Pessoa Pagador { get; set; }
 
+        public int RecebedorCd { get; set; }
         [ForeignKey("RecebedorCd")]
         public Pessoa Recebedor { get; set; }
 

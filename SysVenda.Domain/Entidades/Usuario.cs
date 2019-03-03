@@ -26,6 +26,6 @@ namespace SysVenda.Domain.Entidades
         
         public char? Tipo { get; set; }
 
-        public Boolean Bloqueado { get; set; }
+        public Boolean Bloqueado { get; set; }        
     }
 }
