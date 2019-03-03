@@ -1,12 +1,16 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using SysVenda.Api.Data;
 using SysVenda.Api.Identity;
+using SysVenda.Api.Seguranca;
 using SysVenda.Domain.Entidades;
 
 namespace SysVenda.Api.Controllers
@@ -18,15 +22,18 @@ namespace SysVenda.Api.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly AuthenticatedUser _user;
 
         public ContaUsuarioController(
             ApplicationDbContext context,
             UserManager<ApplicationUser> userManager,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager,
+            AuthenticatedUser user)
         {
             _context = context;
             _userManager = userManager;
             _roleManager = roleManager;
+            _user = user;
         }
        
 
@@ -81,14 +88,19 @@ namespace SysVenda.Api.Controllers
         // POST api/ContaUsuario/AlterarSenha
         [HttpPost]
         [Route("AlterarSenha")]
+        [Authorize(AuthenticationSchemes =
+        JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> AlterarSenha(ChangePasswordBindingModel model)
-        {
+        {         
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
-            }
+            }            
 
-            var usuarioLogado = await _userManager.GetUserAsync(HttpContext.User);
+            var usuarioLogado = await _userManager.GetUserAsync(_user.accesorUser);
+
+            if (!_userManager.CheckPasswordAsync(usuarioLogado, model.OldPassword).Result)
+                return BadRequest("Credenciais inválidas.");
 
             IdentityResult result = await _userManager.ChangePasswordAsync(usuarioLogado, model.OldPassword,
                 model.NewPassword);
@@ -98,7 +110,7 @@ namespace SysVenda.Api.Controllers
                 return GetErrorResult(result);
             }
 
-            return Ok();
+            return Ok(new { mensagem = "Senha alterada com sucesso!"});
         }
 
     }

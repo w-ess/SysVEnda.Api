@@ -17,7 +17,8 @@ namespace SysVenda.Api.Seguranca
         {
             _accessor = accessor;
         }
-
+        
+        public ClaimsPrincipal accesorUser => _accessor.HttpContext.User;
         public string Email => _accessor.HttpContext.User.Identity.Name;
         public string Name => GetClaimsIdentity().FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;        
 
