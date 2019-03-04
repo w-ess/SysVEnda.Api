@@ -14,8 +14,8 @@ using SysVenda.Domain.Entidades;
 namespace SysVenda.Api.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(AuthenticationSchemes =
-    JwtBearerDefaults.AuthenticationScheme)]    
+    //[Authorize(AuthenticationSchemes =
+    //JwtBearerDefaults.AuthenticationScheme)]    
     public class ProdutosController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -86,16 +86,41 @@ namespace SysVenda.Api.Controllers
             return NoContent();
         }
 
-         [HttpPatch("{id}")]
-         public void Patch(int id, Delta<Produto> produto)
-         { 
-              var dominio = _context.Produtos.FirstOrDefault(x => x.Codigo == id);
-         
-              if (dominio != null)
-              {
-                produto.Patch(dominio);
-              }
-         }
+        //Executa sem erro, porém não salva as alterações
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PatchProduto(int id, Delta<Produto> patch)
+         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            Produto produto = _context.Produtos.FirstOrDefault(x => x.Codigo == id);         
+            if (produto == null)
+            {
+                return NotFound();
+            }
+
+            patch.Patch(produto);
+
+            try
+            {                
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ProdutoExists(id))
+                {
+                    return NotFound( new { mensagem = "Produto não encontrado."});
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return Ok(produto);
+        }
 
         // POST: api/Produtos
         [HttpPost]
