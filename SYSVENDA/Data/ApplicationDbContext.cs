@@ -31,5 +31,6 @@ namespace SysVenda.Api.Data
         public DbSet<ContaReceberParcela> ContaReceberParcela { get; set; }
         public DbSet<ContaRecebimento> ContaRecebimento { get; set; }
         public DbSet<ContaPagamento> ContaPagamento { get; set; }
+        public DbSet<Empresa> Empresa { get; set; }
     }
 }
