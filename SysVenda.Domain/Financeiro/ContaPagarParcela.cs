@@ -17,6 +17,8 @@ namespace SysVenda.Domain.Financeiro
 
         public int Parcela { get; set; }
 
+        public DateTime DataVencimento { get; set; }
+
         [Column(TypeName = "decimal(15, 2)")]
         public decimal Valor { get; set; }
 
