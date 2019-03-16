@@ -17,6 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Swashbuckle.AspNetCore.Swagger;
 using SysVenda.Api.Data;
 using SysVenda.Api.Seguranca;
 using SysVenda.Domain.Entidades;
@@ -83,6 +84,12 @@ namespace SYSVENDA
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<AuthenticatedUser>();
 
+            // Registra o gerador Swagger definindo um ou mais documentos Swagger
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "APISysVenda", Version = "v1"});
+            });
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -105,6 +112,15 @@ namespace SYSVENDA
 
             app.UseHttpsRedirection();
             app.UseMvc();
+
+            // Habilita o middleware para servir o Swagger gerado como um endpoint JSON
+            app.UseSwagger();
+
+            // Habilita o moddleware para servir o Swagger-ui (HTML, JS, CSS, etc.). Especificado o endpoint Swagger JSON
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "APISysVenda V1");
+            });
         }
     }
 }

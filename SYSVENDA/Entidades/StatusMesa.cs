@@ -5,7 +5,20 @@ using System.Text;
 using SysVenda.Api.Data;
 
 namespace SysVenda.Domain.Entidades
-{    
+{
+    /// <summary>
+    /// Retornar status das Mesas (Livre, Ocupada)
+    /// </summary>
+    /// <remarks>
+    /// Exemplo de entrada:
+    /// 
+    ///     {
+    ///         "Codigo": 1,
+    ///         "Descricao": "9999999999",
+    ///         "Status": "Livre"  
+    ///     }
+    ///     
+    /// </remarks>
     public class StatusMesa
     {
         public int Codigo { get; set; }
