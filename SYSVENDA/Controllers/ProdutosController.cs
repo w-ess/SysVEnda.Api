@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -87,7 +86,7 @@ namespace SysVenda.Api.Controllers
         }
 
         //Executa sem erro, porém não salva as alterações
-        [HttpPatch("{id}")]
+       /* [HttpPatch("{id}")]
         public async Task<IActionResult> PatchProduto(int id, Delta<Produto> patch)
          {
             if (!ModelState.IsValid)
@@ -120,7 +119,7 @@ namespace SysVenda.Api.Controllers
             }
 
             return Ok(produto);
-        }
+        }*/
 
         // POST: api/Produtos
         [HttpPost]
