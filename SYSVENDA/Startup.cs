@@ -67,7 +67,7 @@ namespace SYSVENDA
                     },
                     OnTokenValidated = context =>
                     {
-                        Console.WriteLine("Toekn válido...: " + context.SecurityToken);
+                        Console.WriteLine("Token válido...: " + context.SecurityToken);
                         return Task.CompletedTask;
                     }
                 };
