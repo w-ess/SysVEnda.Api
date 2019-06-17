@@ -89,8 +89,10 @@ namespace SYSVENDA
             {
                 c.SwaggerDoc("v1", new Info { Title = "APISysVenda", Version = "v1"});
             });
-
+            
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -107,6 +109,8 @@ namespace SYSVENDA
             {
                 app.UseHsts();
             }
+
+            app.UseCors(option => option.AllowAnyOrigin());
 
             app.UseAuthentication();
 
